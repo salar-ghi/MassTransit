@@ -40,12 +40,12 @@ builder.Services.AddMassTransit(x =>
             h.Password("NitroMessageDispatcher912*");
         });
         cfg.ConfigureEndpoints(context);
-        //cfg.ReceiveEndpoint("sendmessage-queue", e =>
-        //{
-        //    e.PrefetchCount = 10;
-        //    //e.ConfigureConsumer<MyMessageConsumer>(context);
-        //    e.UseRateLimit(5, new TimeSpan(0, 0, 0, 1));
-        //});
+        cfg.ReceiveEndpoint("sendmessage-queue", e =>
+        {
+            e.PrefetchCount = 10;
+            //e.ConfigureConsumer<MyMessageConsumer>(context);
+            e.UseRateLimit(5, new TimeSpan(0, 0, 0, 1));
+        });
     });
 });
 

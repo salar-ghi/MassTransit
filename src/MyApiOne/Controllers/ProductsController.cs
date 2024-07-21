@@ -194,16 +194,16 @@ public class ProductsController : ControllerBase
             {
                 await sendEndpoint.Send<Message>(msg);
 
-                await _publishEndpoint.Publish(new Message
-                {
-                    Title = msg.Title,
-                    Body= msg.Body,
-                    Provider = 1,
-                    SendDate = DateTime.Now,
-                    SenderId = 0,
-                    Metadata = msg.Metadata,
-                    Recipients = msg.Recipients
-                });
+                //await _publishEndpoint.Publish(new Message
+                //{
+                //    Title = msg.Title,
+                //    Body= msg.Body,
+                //    Provider = 1,
+                //    SendDate = DateTime.Now,
+                //    SenderId = 0,
+                //    Metadata = msg.Metadata,
+                //    Recipients = msg.Recipients
+                //});
             }
 
             //await _busControl.StopAsync();
