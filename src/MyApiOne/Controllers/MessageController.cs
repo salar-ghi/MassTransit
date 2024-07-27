@@ -1,12 +1,14 @@
 ﻿using MassTransit;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MyApiOne.Models;
+using Core.Enums.Messaging.MessageDispatcher;
+using Core.Models.Messaging.MessageDispatcher;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyApiOne.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class MessageController : ControllerBase
 {
     private readonly IPublishEndpoint _publishEndpoint;
@@ -26,35 +28,40 @@ public class MessageController : ControllerBase
         _sendEndpoint = sendEndpoint;
     }
 
-
-
-    private static readonly List<Message> messages = new()
+    private static readonly List<SendMessageRq> messages = new()
     {
-        new Message {Title= "ApiOne Sms", Body = "Test Event Architect Api one to get assure what is going on",
-            Provider =1, SendDate=DateTime.Now, Type= MessageType.SMS,
-            SenderId=0, Metadata="",Recipients = res1 },
+        new SendMessageRq {Title= "ApiOne Sms", Body = "Test Event Architect Api one to get assure what is going on",
+            ProviderId =1, SendDate=DateTime.Now.AddMinutes(5), Type= MessageType.SMS,
+            SenderId=1, Metadata="", Recipients = new List<RecipientRq>
+            {
+                new RecipientRq { UserId = 1, Destination = "09108592503"},
+                new RecipientRq { UserId = 1, Destination = "09029182599"}
+            } },
 
-        new Message {Title= "ApiOne Email", Body = "Test Event Architect Api one to get assure what is going on",
-            Provider =1, SendDate=DateTime.Now, Type= MessageType.Email,
-            SenderId=0, Metadata="",Recipients = res2 },
+        new SendMessageRq {Title= "ApiOne Email", Body = "Test Event Architect Api one to get assure what is going on",
+            ProviderId =1, SendDate=DateTime.Now.AddMinutes(5), Type= MessageType.Email,
+            SenderId=1, Metadata="", Recipients = new List<RecipientRq>
+            {
+                new RecipientRq { UserId = 1, Destination = "salar.ghi1993@gmail.com"},
+                new RecipientRq { UserId = 1, Destination = "salar.1993ghi@gmail.com"}
+            } },
     };
 
-    private static readonly List<Recipient> res1 = new()
+    private static readonly List<RecipientRq> Recipients = new()
     {
-        new Recipient { UserId = 1, Destination = "09108592503"},
-        new Recipient { UserId = 1, Destination = "09029182599"}
+        new RecipientRq { UserId = 1, Destination = "09108592503"},
+        new RecipientRq { UserId = 1, Destination = "09029182599"}
     };
 
-    private static readonly List<Recipient> res2 = new()
+    private static readonly List<RecipientRq> res2 = new()
     {
-        new Recipient { UserId = 1, Destination = "salar.ghi1993@gmail.com"},
-        new Recipient { UserId = 1, Destination = "salar.1993ghi@gmail.com"}
+        new RecipientRq { UserId = 1, Destination = "salar.ghi1993@gmail.com"},
+        new RecipientRq { UserId = 1, Destination = "salar.1993ghi@gmail.com"}
     };
-
 
 
     [HttpGet]
-    public IEnumerable<Message> GetMessages()
+    public IEnumerable<SendMessageRq> GetMessages()
     {
         return messages;
     }
@@ -65,16 +72,63 @@ public class MessageController : ControllerBase
     {
         try
         {
-           
-
-
-            var sendEndpoint = await _busControl.GetSendEndpoint(new Uri("queue:sendmessage-queue"));
             //await _busControl.StartAsync();
+            //var endpoint = await _sendEndpoint.GetSendEndpoint(new Uri("queue:sendmessage_queue"));
+            //await _publishEndpoint.PublishBatch(messages);
+            //await endpoint.SendBatch(messages);
+
+
+            // 22222222222222222222222222222222222222222
+            //var factory = new ConnectionFactory { HostName = "localhost" };
+            //using var connection = factory.CreateConnection();
+            //using var channel = connection.CreateModel();
+
+            //channel.ExchangeDeclare(exchange: "MessageDispatcher", type: ExchangeType.Fanout);
+
+            //var queueName = channel.QueueDeclare().QueueName;
+            //channel.QueueBind(queue: queueName, exchange:"MessageDispatcher", routingKey: string.Empty);
+
+            //var consumer = new EventingBasicConsumer(channel);
+            //consumer.Received += (model, ea) =>
+            //{
+            //    byte[] body = ea.Body.ToArray();
+            //    var message =Encoding.UTF8.GetString(body);
+            //};
+            //channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
+            // 22222222222222222222222222222222222222222
+
+            // 11111111111111111111111111111111111111111
+            //channel.QueueDeclare(queue: "hello",
+            //         durable: false,
+            //         exclusive: false,
+            //         autoDelete: false,
+            //         arguments: null);
+
+            //const string message = "Hello World!";
+            //var body = Encoding.UTF8.GetBytes(message);
+
+            //channel.BasicPublish(exchange: string.Empty,
+            //                     routingKey: "hello",
+            //                     basicProperties: null,
+            //                     body: body);
+
+            //await _busControl.StartAsync();
+            //var sendEndpoint = await _busControl.GetSendEndpoint(new Uri("queue:sendmessage-queue-test"));
+            // 11111111111111111111111111111111111111111
+
+
+            var sendEndpoint = await _busControl.GetSendEndpoint(new Uri("queue:sendmessage_queue"));
+            await sendEndpoint.SendBatch(messages);
 
             foreach (var msg in messages)
             {
-                await sendEndpoint.Send<Message>(msg);
+                //await sendEndpoint.Send<Message>(msg);
+                await sendEndpoint.Send(msg);
+                //await endpoint.Send(msg);
             }
+
+            //await _bus.PublishBatch(messages);
+            //await _bus.Publish(messages); 
             //await _busControl.StopAsync();
 
             return Ok();
