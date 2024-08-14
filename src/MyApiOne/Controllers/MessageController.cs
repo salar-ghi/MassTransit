@@ -8,7 +8,7 @@ namespace MyApiOne.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+//[Authorize]
 public class MessageController : ControllerBase
 {
     private readonly IPublishEndpoint _publishEndpoint;
@@ -67,75 +67,75 @@ public class MessageController : ControllerBase
     }
 
 
-    [HttpPost("SaveMessage")]
-    public async Task<ActionResult> SaveMessage()
-    {
-        try
-        {
-            //await _busControl.StartAsync();
-            //var endpoint = await _sendEndpoint.GetSendEndpoint(new Uri("queue:sendmessage_queue"));
-            //await _publishEndpoint.PublishBatch(messages);
-            //await endpoint.SendBatch(messages);
+    //[HttpPost("SaveMessage")]
+    //public async Task<ActionResult> SaveMessage()
+    //{
+    //    try
+    //    {
+    //        //await _busControl.StartAsync();
+    //        //var endpoint = await _sendEndpoint.GetSendEndpoint(new Uri("queue:sendmessage_queue"));
+    //        //await _publishEndpoint.PublishBatch(messages);
+    //        //await endpoint.SendBatch(messages);
 
 
-            // 22222222222222222222222222222222222222222
-            //var factory = new ConnectionFactory { HostName = "localhost" };
-            //using var connection = factory.CreateConnection();
-            //using var channel = connection.CreateModel();
+    //        // 22222222222222222222222222222222222222222
+    //        //var factory = new ConnectionFactory { HostName = "localhost" };
+    //        //using var connection = factory.CreateConnection();
+    //        //using var channel = connection.CreateModel();
 
-            //channel.ExchangeDeclare(exchange: "MessageDispatcher", type: ExchangeType.Fanout);
+    //        //channel.ExchangeDeclare(exchange: "MessageDispatcher", type: ExchangeType.Fanout);
 
-            //var queueName = channel.QueueDeclare().QueueName;
-            //channel.QueueBind(queue: queueName, exchange:"MessageDispatcher", routingKey: string.Empty);
+    //        //var queueName = channel.QueueDeclare().QueueName;
+    //        //channel.QueueBind(queue: queueName, exchange:"MessageDispatcher", routingKey: string.Empty);
 
-            //var consumer = new EventingBasicConsumer(channel);
-            //consumer.Received += (model, ea) =>
-            //{
-            //    byte[] body = ea.Body.ToArray();
-            //    var message =Encoding.UTF8.GetString(body);
-            //};
-            //channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
-            // 22222222222222222222222222222222222222222
+    //        //var consumer = new EventingBasicConsumer(channel);
+    //        //consumer.Received += (model, ea) =>
+    //        //{
+    //        //    byte[] body = ea.Body.ToArray();
+    //        //    var message =Encoding.UTF8.GetString(body);
+    //        //};
+    //        //channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
+    //        // 22222222222222222222222222222222222222222
 
-            // 11111111111111111111111111111111111111111
-            //channel.QueueDeclare(queue: "hello",
-            //         durable: false,
-            //         exclusive: false,
-            //         autoDelete: false,
-            //         arguments: null);
+    //        // 11111111111111111111111111111111111111111
+    //        //channel.QueueDeclare(queue: "hello",
+    //        //         durable: false,
+    //        //         exclusive: false,
+    //        //         autoDelete: false,
+    //        //         arguments: null);
 
-            //const string message = "Hello World!";
-            //var body = Encoding.UTF8.GetBytes(message);
+    //        //const string message = "Hello World!";
+    //        //var body = Encoding.UTF8.GetBytes(message);
 
-            //channel.BasicPublish(exchange: string.Empty,
-            //                     routingKey: "hello",
-            //                     basicProperties: null,
-            //                     body: body);
+    //        //channel.BasicPublish(exchange: string.Empty,
+    //        //                     routingKey: "hello",
+    //        //                     basicProperties: null,
+    //        //                     body: body);
 
-            //await _busControl.StartAsync();
-            //var sendEndpoint = await _busControl.GetSendEndpoint(new Uri("queue:sendmessage-queue-test"));
-            // 11111111111111111111111111111111111111111
+    //        //await _busControl.StartAsync();
+    //        //var sendEndpoint = await _busControl.GetSendEndpoint(new Uri("queue:sendmessage-queue-test"));
+    //        // 11111111111111111111111111111111111111111
 
 
-            var sendEndpoint = await _busControl.GetSendEndpoint(new Uri("queue:sendmessage_queue"));
-            await sendEndpoint.SendBatch(messages);
+    //        var sendEndpoint = await _busControl.GetSendEndpoint(new Uri("queue:sendmessage_queue"));
+    //        await sendEndpoint.SendBatch(messages);
 
-            foreach (var msg in messages)
-            {
-                //await sendEndpoint.Send<Message>(msg);
-                await sendEndpoint.Send(msg);
-                //await endpoint.Send(msg);
-            }
+    //        foreach (var msg in messages)
+    //        {
+    //            //await sendEndpoint.Send<Message>(msg);
+    //            await sendEndpoint.Send(msg);
+    //            //await endpoint.Send(msg);
+    //        }
 
-            //await _bus.PublishBatch(messages);
-            //await _bus.Publish(messages); 
-            //await _busControl.StopAsync();
+    //        //await _bus.PublishBatch(messages);
+    //        //await _bus.Publish(messages); 
+    //        //await _busControl.StopAsync();
 
-            return Ok();
-        }
-        catch (Exception xe)
-        {
-            throw xe;
-        }
-    }
+    //        return Ok();
+    //    }
+    //    catch (Exception xe)
+    //    {
+    //        throw xe;
+    //    }
+    //}
 }

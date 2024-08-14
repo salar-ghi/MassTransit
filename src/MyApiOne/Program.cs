@@ -114,10 +114,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
+//app.UseAuthentication();
+//app.UseAuthorization();
 app.MapControllers(); //.RequireAuthorization("ApiScope");
 
-app.MapGet("api/identity", (ClaimsPrincipal user) => user.Claims.Select(c => new { c.Type, c.Value }))
-    .RequireAuthorization("ApiScope");
+//app.MapGet("api/identity", (ClaimsPrincipal user) => user.Claims.Select(c => new { c.Type, c.Value }))
+//    .RequireAuthorization("ApiScope");
 app.Run();

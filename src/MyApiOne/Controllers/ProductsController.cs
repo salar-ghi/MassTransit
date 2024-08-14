@@ -6,7 +6,7 @@ namespace MyApiOne.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(Policy = "ApiScope")]
+//[Authorize(Policy = "ApiScope")]
 
 //[Route("identity")]
 public class ProductsController : ControllerBase
