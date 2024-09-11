@@ -1,33 +1,55 @@
-using Core.Models;
 using MassTransit;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using MyApiOne;
-using MyApiOne.Models;
-using System.Security.Claims;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.AddControllers();
-
+builder.Services.AddCors();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer("Bearer",options =>
+//builder.Services.AddAuthentication("Bearer")
+//    .AddJwtBearer("Bearer",options =>
+//    {
+//        options.Authority = "https://localhost:5010";
+//        options.TokenValidationParameters.ValidateAudience = false;
+//        //options.TokenValidationParameters = new TokenValidationParameters
+//        //{
+//        //    ValidateAudience = false
+//        //};
+//        //options.Audience = "scope1";
+//        //options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
+//    });
+
+
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+var key = Encoding.UTF8.GetBytes(jwtSettings["Secret"]);
+
+var authenticationProviderKey = "Bearer";
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = "Bearer";
+    options.DefaultChallengeScheme = "Bearer";
+
+})
+    .AddJwtBearer(authenticationProviderKey, options =>
     {
-        options.Authority = "https://localhost:5001";
-        options.TokenValidationParameters.ValidateAudience = false;
-        //options.TokenValidationParameters = new TokenValidationParameters
-        //{
-        //    ValidateAudience = false
-        //};
-        //options.Audience = "scope1";
-        //options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
+        options.Authority = "https://localhost:5010/api/Auth"; // auth server
+        options.Audience = "NitroIdentity"; // audience
+        options.ClaimsIssuer = "NitroIdentityJwt";
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+
+        };
     });
+
 
 builder.Services.AddAuthorization(options =>
     options.AddPolicy("ApiScope", policy =>
@@ -112,12 +134,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors();
 app.UseHttpsRedirection();
-//app.UseAuthentication();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers(); //.RequireAuthorization("ApiScope");
 
 //app.MapGet("api/identity", (ClaimsPrincipal user) => user.Claims.Select(c => new { c.Type, c.Value }))
 //    .RequireAuthorization("ApiScope");
+
+Console.Clear();
 app.Run();

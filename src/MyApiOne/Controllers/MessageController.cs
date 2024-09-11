@@ -8,7 +8,6 @@ namespace MyApiOne.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-//[Authorize]
 public class MessageController : ControllerBase
 {
     private readonly IPublishEndpoint _publishEndpoint;
@@ -61,6 +60,7 @@ public class MessageController : ControllerBase
 
 
     [HttpGet]
+    [Authorize]
     public IEnumerable<SendMessageRq> GetMessages()
     {
         return messages;
