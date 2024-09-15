@@ -35,6 +35,7 @@ builder.Services.AddAuthentication(options =>
 })
     .AddJwtBearer(authenticationProviderKey, options =>
     {
+        options.RequireHttpsMetadata = true;
         options.Authority = "https://localhost:5010/api/Auth"; // auth server
         options.Audience = "NitroIdentity"; // audience
         options.ClaimsIssuer = "NitroIdentityJwt";
